@@ -1,27 +1,37 @@
+from typing import Callable, List
+
+import pygments.lexers
 import transformers
-from typing import List
+
+
+class Tokenizer:
+    def __init__(self, tokenize_fn: Callable):
+        self.tokenize_fn = tokenize_fn
+        example_tokens = self.tokenize_fn('example string')
+        assert isinstance(example_tokens, list), 'tokenize_fn must return a List[str]'
+        assert all([isinstance(t, str) for t in example_tokens]), 'tokenize_fn must return a List[str]'
+
+    def tokenize(self, s: str, **kwargs) -> List[str]:
+        tokens = self.tokenize_fn(s, **kwargs)
+        return tokens
 
 
 class TransformerTokenizer:
     def __init__(self, name: str = 'microsoft/codebert-base'):
-        self.tokenizer = transformers.AutoTokenizer.from_pretrained('microsoft/codebert-base')
+        self._tokenizer = transformers.AutoTokenizer.from_pretrained(name)
+        self._vocab = self._tokenizer.vocab
 
-    def tokenize(self, code_str: str, **kwargs) -> List[str]:
-        """Tokenize code string."""
-        tokens = self.tokenizer.tokenize(code_str, **kwargs)
+    def tokenize(self, s: str, **kwargs) -> List[str]:
+        idxs = self._tokenizer.encode(s, **kwargs)
+        tokens = self._tokenizer.convert_ids_to_tokens(idxs)
         return tokens
 
-    def encode(self, code_str: str, **kwargs) -> List[int]:
-        """Tokenize and numericalize code string."""
-        encoded_tokens = self.tokenizer.encode(code_str, **kwargs)
-        return encoded_tokens
 
-    def decode(self, encoded_tokens: List[int], **kwargs) -> str:
-        """Converts encoded tokens back to code string."""
-        code_str = self.tokenizer.decode(encoded_tokens, **kwargs)
-        return code_str
+class PygmentsTokenizer:
+    def __init__(self, extension: str):
+        self._lexer = pygments.lexers.get_lexer_for_filename(extension)
 
-
-class TransformerTokenizerForMaskedLM(TransformerTokenizer):
-    def __init__(self, name: str = 'microsoft/codebert-base-mlm'):
-        self.tokenizer = transformers.RobertaTokenizer.from_pretrained('microsoft/codebert-base-mlm')
+    def tokenize(self, s: str) -> List[str]:
+        lexer_output = self._lexer.get_tokens(s)
+        tokens = [t for _, t in lexer_output if t.strip() != '']
+        return tokens

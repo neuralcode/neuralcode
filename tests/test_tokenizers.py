@@ -1,5 +1,7 @@
+from neuralcode.tokenizers import Tokenizer
 from neuralcode.tokenizers import TransformerTokenizer
-from neuralcode.tokenizers import TransformerTokenizerForMaskedLM
+from neuralcode.tokenizers import PygmentsTokenizer
+
 
 test_code_str = """def quick_sort(collection: list) -> list:
     if len(collection) < 2:
@@ -12,28 +14,24 @@ test_code_str = """def quick_sort(collection: list) -> list:
     return quick_sort(lesser) + [pivot] + quick_sort(greater)"""
 
 
+def test_tokenizer():
+    def tokenize_fn(s):
+        return s.split()
+    tokenizer = Tokenizer(tokenize_fn)
+    tokens = tokenizer.tokenize(test_code_str)
+    assert isinstance(tokens, list)
+    assert all([isinstance(t, str) for t in tokens])
+
+
 def test_transformer_tokenizer():
     tokenizer = TransformerTokenizer()
     tokens = tokenizer.tokenize(test_code_str)
     assert isinstance(tokens, list)
-    assert all([isinstance(t, str) for t in tokens]), tokens
-    encoded_tokens = tokenizer.encode(test_code_str)
-    assert isinstance(encoded_tokens, list)
-    assert all([isinstance(t, int) for t in encoded_tokens]), encoded_tokens
-    code_str = tokenizer.decode(encoded_tokens, skip_special_tokens=True)
-    assert isinstance(code_str, str)
-    assert code_str == test_code_str
+    assert all([isinstance(t, str) for t in tokens])
 
 
-def test_transformer_tokenizer_for_masked_lm():
-    tokenizer = TransformerTokenizerForMaskedLM()
+def test_pygments_tokenizer():
+    tokenizer = PygmentsTokenizer('.py')
     tokens = tokenizer.tokenize(test_code_str)
     assert isinstance(tokens, list)
-    assert all([isinstance(t, str) for t in tokens]), tokens
-    encoded_tokens = tokenizer.encode(test_code_str)
-    assert isinstance(encoded_tokens, list)
-    assert all([isinstance(t, int) for t in encoded_tokens]), encoded_tokens
-    code_str = tokenizer.decode(encoded_tokens, skip_special_tokens=True)
-    assert isinstance(code_str, str)
-    assert code_str == test_code_str
-    
+    assert all([isinstance(t, str) for t in tokens])

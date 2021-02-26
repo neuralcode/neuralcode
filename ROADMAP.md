@@ -37,7 +37,7 @@
 * Wrappers around ANTLR
 * Wrappers around parsing function as AST
 * Need to see if HuggingFace Tokenizers can do non-BPE tokenization?
-* Should create a `Token` object that carries extra information such as `is_variable`, `is_function`, `is_punct`. `is_punct`, `is_keyword`.
+* Should create a `Token` object that carries extra information such as `is_variable`, `is_function`, `is_punct`. `is_keyword`.
 
 ## Vocabulary
 

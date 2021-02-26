@@ -2,14 +2,20 @@
 
 ## Milestone One
 
-* CodeSearchNet dataset
+* [x] CodeSearchNet dataset
 * Tokenizer wrapper:
-  * Wrapper for provided callable `tokenize_fn`
-  * Wrapper for HuggingFace Tokenizers
-  * Wrapper for Pygments
-* `Token` class
+  * [x] Wrapper for provided callable `tokenize_fn`
+  * [x] Wrapper for HuggingFace Tokenizers
+  * [x] Wrapper for Pygments
+  * Improve tokenizer tests
+* ~~`Token` class~~
+* [x] Vocab class
+  * Improve vocab tests
 * BaseModel
   * Wrapper around PyTorch nn.Module
   * Wrapper around HuggingFace module
+  * CausalLM
+  * MaskedLM
+* Training code
   * CausalLM
   * MaskedLM
