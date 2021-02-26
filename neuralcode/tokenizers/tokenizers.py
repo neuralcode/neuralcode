@@ -11,8 +11,8 @@ class Tokenizer:
         assert isinstance(example_tokens, list), 'tokenize_fn must return a List[str]'
         assert all([isinstance(t, str) for t in example_tokens]), 'tokenize_fn must return a List[str]'
 
-    def tokenize(self, s: str, **kwargs) -> List[str]:
-        tokens = self.tokenize_fn(s, **kwargs)
+    def tokenize(self, s: str) -> List[str]:
+        tokens = self.tokenize_fn(s)
         return tokens
 
 
@@ -22,7 +22,7 @@ class TransformerTokenizer:
         self._vocab = self._tokenizer.vocab
 
     def tokenize(self, s: str, **kwargs) -> List[str]:
-        idxs = self._tokenizer.encode(s, **kwargs)
+        idxs = self._tokenizer.encode(s, truncation=True)
         tokens = self._tokenizer.convert_ids_to_tokens(idxs)
         return tokens
 
