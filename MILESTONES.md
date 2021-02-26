@@ -8,6 +8,7 @@
   * [x] Wrapper for HuggingFace Tokenizers
   * [x] Wrapper for Pygments
   * Improve tokenizer tests
+* Method to strip tokens from a file
 * ~~`Token` class~~
 * [x] Vocab class
   * Improve vocab tests
