@@ -6,6 +6,7 @@ import transformers
 
 class Tokenizer:
     def __init__(self, tokenize_fn: Callable):
+        assert isinstance(tokenize_fn, callable), 'tokenize_fn must be callable'
         self.tokenize_fn = tokenize_fn
         example_tokens = self.tokenize_fn('example string')
         assert isinstance(example_tokens, list), 'tokenize_fn must return a List[str]'
